@@ -473,7 +473,7 @@ footer{
         <div class="price-row"><span class="label">VIP</span><span class="amt">S/ 105</span></div>
         <div class="price-row"><span class="label">General</span><span class="amt">S/ 55</span></div>
         <div class="phase-cta">
-          <button class="btn btn-primary btn-sm" style="width:100%" data-comprar="VIP Preventa 1">Comprar</button>
+          <button class="btn btn-primary btn-sm" style="width:100%" data-comprar="Preventa 1">Comprar</button>
         </div>
       </div>
 
@@ -529,7 +529,7 @@ footer{
     </div>
 
     <div class="buy-cta">
-      <button class="btn btn-primary" data-comprar="General">Comprar entradas ahora</button>
+      <button class="btn btn-primary" data-comprar="Preventa 1">Comprar entradas ahora</button>
     </div>
 
     <div id="compra-fallback" hidden>
@@ -692,6 +692,7 @@ footer{
 
   document.querySelectorAll('[data-comprar]').forEach(function(btn){
     btn.addEventListener('click', function(){
+      var fase = btn.getAttribute('data-comprar');
       var vendedor = siguienteVendedor();
       var fallback = document.getElementById('compra-fallback');
       if (!vendedor){
@@ -702,7 +703,7 @@ footer{
         return;
       }
       if (fallback) fallback.hidden = true;
-      var msg = encodeURIComponent('Hola ' + vendedor.nombre + ', quiero comprar entradas para la Cachimbeada Minera (4 de diciembre).');
+      var msg = encodeURIComponent('Hola ' + vendedor.nombre + ', quiero comprar entradas en ' + fase + ' para la Cachimbeada Minera (4 de diciembre).');
       var url = 'https://wa.me/51' + vendedor.telefono + '?text=' + msg;
       window.open(url, '_blank', 'noopener');
     });
