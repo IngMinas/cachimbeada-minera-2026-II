@@ -812,11 +812,10 @@ footer{
 
   function siguienteVendedor(){
     if (!VENDEDORES_AUTORIZADOS.length) return null;
-    var idx = 0;
-    try { idx = parseInt(localStorage.getItem('cm_vendor_idx') || '0', 10) || 0; } catch(e) {}
-    var vendedor = VENDEDORES_AUTORIZADOS[idx % VENDEDORES_AUTORIZADOS.length];
-    try { localStorage.setItem('cm_vendor_idx', String(idx + 1)); } catch(e) {}
-    return vendedor;
+    // Al azar en vez de por turnos: así nadie queda sobrerrepresentado por
+    // ser el primero de la lista ni el punto de partida de cada navegador.
+    var idx = Math.floor(Math.random() * VENDEDORES_AUTORIZADOS.length);
+    return VENDEDORES_AUTORIZADOS[idx];
   }
 
   document.querySelectorAll('[data-comprar]').forEach(function(btn){
