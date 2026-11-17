@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cachimbeada Minera</title>
+
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Paleta: oro sobre fondo casi negro, como el afiche oficial del evento;
+   tipografía display Cinzel (oro, mayúsculas) + Work Sans para el cuerpo.
+   Layout: hero a dos columnas (texto + afiche oficial enmarcado),
+   secciones en franjas con ancho máximo centrado y rejilla de tarjetas. */
+:root{
+  --bg:#0c0a08;
+  --surface:#18130f;
+  --surface-2:#221b14;
+  --line:#3a2f20;
+  --fg:#f4ead1;
+  --muted:#b7a688;
+  --gold:#d9b25c;
+  --gold-soft:#eccf8e;
+  --gold-deep:#9c6f28;
+  --maroon:#7c2632;
+  --ok:#7fae6a;
+  --warn:#d9a441;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:'Work Sans', ui-sans-serif, system-ui, sans-serif;
+  margin:0;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+h1,h2,h3{font-family:'Cinzel', Georgia, 'Times New Roman', serif; margin:0; text-wrap:balance}
+p{margin:0}
+.wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+}
+.eyebrow{
+  font-size:.78rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--gold);
+  font-weight:600;
+}
+a{color:inherit}
+button{font-family:inherit}
+
+/* ---------- header ---------- */
+header.site{
+  position:sticky;
+  top:env(safe-area-inset-top, 0px);
+  z-index:20;
+  background:rgba(12,10,8,.86);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0 0 auto;
+  height:env(safe-area-inset-top, 0px);
+  z-index:21;
+  background:#0c0a08;
+}
+.site .wrap{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding-block:10px;
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand img{height:34px;width:34px;border-radius:50%;flex:none}
+.brand-name{font-family:'Cinzel',serif;font-size:1rem;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-links{display:flex;gap:18px;font-size:.85rem}
+.nav-links a{cursor:pointer;color:var(--muted);text-decoration:none}
+.nav-links a:hover{color:var(--gold-soft)}
+@media (max-width:640px){ .nav-links{display:none} }
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:13px 26px;
+  border-radius:999px;
+  font-weight:600;
+  font-size:.95rem;
+  letter-spacing:.02em;
+  border:1px solid transparent;
+  cursor:pointer;
+  text-decoration:none;
+  transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.btn:focus-visible{outline:2px solid var(--gold-soft); outline-offset:2px}
+.btn-primary{
+  background:linear-gradient(180deg, var(--gold-soft), var(--gold-deep));
+  color:#211603;
+  box-shadow:0 10px 24px -10px rgba(217,178,92,.55);
+}
+.btn-primary:hover{transform:translateY(-1px); box-shadow:0 14px 28px -10px rgba(217,178,92,.7)}
+.btn-ghost{
+  background:transparent;
+  border-color:var(--line);
+  color:var(--fg);
+}
+.btn-ghost:hover{border-color:var(--gold); color:var(--gold-soft)}
+.btn-sm{padding:9px 18px; font-size:.82rem}
+
+/* ---------- ticker ---------- */
+.ticker{
+  overflow:hidden;
+  background:var(--surface);
+  border-bottom:1px solid var(--line);
+  padding-block:8px;
+  white-space:nowrap;
+}
+.ticker-track{
+  display:inline-flex;
+  gap:28px;
+  animation:ticker 26s linear infinite;
+  will-change:transform;
+}
+.ticker-track span{
+  font-family:'Cinzel',serif;
+  font-size:.74rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--gold-soft);
+}
+.ticker-track span em{color:var(--muted); font-style:normal; margin:0 4px}
+@keyframes ticker{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;
+  padding-block:52px 60px;
+  overflow:hidden;
+  background:
+    radial-gradient(60% 50% at 85% 0%, rgba(217,178,92,.14), transparent 60%),
+    radial-gradient(50% 40% at 0% 100%, rgba(124,38,50,.18), transparent 60%),
+    var(--bg);
+  background-size:140% 140%, 140% 140%, auto;
+  animation:heroGlow 16s ease-in-out infinite alternate;
+}
+@keyframes heroGlow{
+  from{ background-position:85% 0%, 0% 100%, 0 0 }
+  to{ background-position:70% 15%, 15% 85%, 0 0 }
+}
+.sparkle{
+  position:absolute;
+  border-radius:50%;
+  background:var(--gold-soft);
+  opacity:0;
+  pointer-events:none;
+  animation:twinkle 3.6s ease-in-out infinite;
+}
+@keyframes twinkle{
+  0%, 100%{ opacity:0; transform:scale(.6) }
+  50%{ opacity:.85; transform:scale(1) }
+}
+.hero .wrap{display:grid; grid-template-columns:1.15fr .85fr; gap:40px; align-items:center}
+@media (max-width:860px){ .hero .wrap{grid-template-columns:1fr} }
+.hero h1{
+  font-size:clamp(2.6rem, 6vw, 4.1rem);
+  line-height:1.02;
+  background:linear-gradient(180deg, var(--gold-soft), var(--gold-deep));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  letter-spacing:.01em;
+}
+.hero .sub{
+  margin-top:10px;
+  font-size:1.05rem;
+  color:var(--muted);
+  letter-spacing:.03em;
+}
+.facts{
+  margin-top:26px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.chip{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:9px 14px;
+  font-size:.85rem;
+}
+.chip b{color:var(--gold-soft); font-weight:600}
+.cta-row{display:flex; flex-wrap:wrap; gap:12px; margin-top:28px}
+.cta-row .btn-primary{animation:ctaPulse 2.6s ease-in-out infinite}
+@keyframes ctaPulse{
+  0%, 100%{ box-shadow:0 10px 24px -10px rgba(217,178,92,.55) }
+  50%{ box-shadow:0 10px 30px -6px rgba(217,178,92,.85) }
+}
+.countdown{
+  margin-top:28px;
+  display:flex;
+  gap:14px;
+}
+.cd-box{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 4px;
+  width:68px;
+  text-align:center;
+}
+.cd-box strong{
+  display:block;
+  font-family:'Cinzel',serif;
+  font-size:1.5rem;
+  color:var(--gold-soft);
+  font-variant-numeric:tabular-nums;
+}
+.cd-box span{font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+
+.poster-frame{
+  position:relative;
+  justify-self:center;
+  max-width:320px;
+  width:100%;
+  filter:drop-shadow(0 26px 40px rgba(0,0,0,.55));
+  animation:posterFloat 6s ease-in-out infinite;
+}
+@keyframes posterFloat{
+  0%, 100%{ transform:rotate(-2.2deg) translateY(0) }
+  50%{ transform:rotate(-1deg) translateY(-10px) }
+}
+.poster-frame img{
+  border-radius:10px;
+  border:6px solid #0f0c09;
+  outline:1px solid var(--gold-deep);
+}
+.poster-pin{
+  position:absolute;
+  top:-10px; left:50%;
+  transform:translateX(-50%);
+  width:18px;height:18px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, var(--gold-soft), var(--gold-deep));
+  box-shadow:0 3px 6px rgba(0,0,0,.5);
+}
+
+/* ---------- sections ---------- */
+section{padding-block:56px}
+.section-head{max-width:640px; margin-bottom:34px}
+.section-head h2{font-size:clamp(1.6rem,3.4vw,2.2rem); margin-top:8px}
+.alt{background:var(--surface)}
+
+/* lineup */
+.lineup-grid{
+  display:grid;
+  grid-template-columns:repeat(5, 1fr);
+  gap:16px;
+}
+@media (max-width:900px){ .lineup-grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:480px){ .lineup-grid{grid-template-columns:1fr 1fr} }
+.act{
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.act:hover{
+  transform:translateY(-6px);
+  border-color:var(--gold-deep);
+  box-shadow:0 18px 30px -16px rgba(0,0,0,.6);
+}
+.act .shot{aspect-ratio:3/4; overflow:hidden; background:#000}
+.act .shot img{width:100%;height:100%;object-fit:cover}
+.act .cap{padding:12px 12px 14px}
+.act .cap b{font-family:'Cinzel',serif; font-size:.92rem; letter-spacing:.02em; color:var(--gold-soft); display:block}
+.act .cap small{color:var(--muted); font-size:.74rem}
+.act.mystery .shot{
+  display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(60% 60% at 50% 35%, rgba(217,178,92,.18), transparent 70%), #110d0a;
+}
+.mystery-mark{
+  width:64px;height:64px;border-radius:50%;
+  border:2px solid var(--gold-deep);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif; font-size:1.8rem; color:var(--gold-soft);
+  animation:mysteryPulse 2.2s ease-in-out infinite;
+}
+@keyframes mysteryPulse{
+  0%, 100%{ box-shadow:0 0 0 0 rgba(217,178,92,.45) }
+  50%{ box-shadow:0 0 0 10px rgba(217,178,92,0) }
+}
+
+/* puntos de venta */
+.points-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+@media (max-width:760px){ .points-grid{grid-template-columns:1fr} }
+.point-card{
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.point-card .tag-example{
+  align-self:flex-start;
+  font-size:.65rem;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  color:var(--warn);
+  background:rgba(217,164,65,.14);
+  border-radius:999px;
+  padding:3px 9px;
+}
+.point-card b{font-family:'Cinzel',serif; color:var(--gold-soft); font-size:1rem}
+.point-card p{color:var(--muted); font-size:.85rem}
+.point-card .hours{font-size:.78rem; color:var(--muted)}
+
+/* tickets */
+.phase-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+@media (max-width:760px){ .phase-grid{grid-template-columns:1fr} }
+.phase{
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.phase:hover{
+  transform:translateY(-4px);
+  border-color:var(--gold-deep);
+  box-shadow:0 16px 28px -16px rgba(0,0,0,.55);
+}
+.phase-top{display:flex; align-items:center; justify-content:space-between; gap:8px}
+.phase-top h3{font-size:1.05rem}
+.status{
+  font-size:.68rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  padding:4px 10px;
+  border-radius:999px;
+  font-weight:600;
+  white-space:nowrap;
+}
+.status.proxima{background:rgba(217,164,65,.16); color:var(--warn)}
+.status.activa{background:rgba(127,174,106,.18); color:var(--ok); display:inline-flex; align-items:center; gap:6px}
+.status.activa::before{
+  content:"";
+  width:7px;height:7px;border-radius:50%;
+  background:var(--ok);
+  animation:livePulse 1.6s ease-in-out infinite;
+}
+@keyframes livePulse{
+  0%, 100%{ box-shadow:0 0 0 0 rgba(127,174,106,.55) }
+  50%{ box-shadow:0 0 0 5px rgba(127,174,106,0) }
+}
+.status.cerrada{background:rgba(183,166,136,.14); color:var(--muted)}
+.phase .range{font-size:.8rem; color:var(--muted)}
+.price-row{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  border-top:1px dashed var(--line);
+  padding-top:10px;
+}
+.price-row + .price-row{border-top:1px dashed var(--line)}
+.price-row .label{font-size:.88rem}
+.price-row .amt{font-family:'Cinzel',serif; color:var(--gold-soft); font-size:1.15rem; font-variant-numeric:tabular-nums}
+.phase .note{font-size:.74rem; color:var(--muted); line-height:1.4}
+.phase-cta{margin-top:auto}
+
+/* how to buy */
+.steps{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+@media (max-width:760px){ .steps{grid-template-columns:1fr} }
+.step{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:20px;
+  transition:transform .25s ease, border-color .25s ease;
+}
+.step:hover{ transform:translateY(-4px); border-color:var(--gold-deep) }
+.step .n{
+  font-family:'Cinzel',serif;
+  color:var(--gold);
+  font-size:1.6rem;
+  display:block;
+  margin-bottom:8px;
+}
+.step p{color:var(--muted); font-size:.88rem; line-height:1.5; margin-top:6px}
+.buy-cta{margin-top:26px; display:flex; flex-wrap:wrap; gap:12px; align-items:center}
+#compra-fallback{
+  margin-top:18px;
+  background:rgba(217,164,65,.08);
+  border:1px solid var(--warn);
+  border-radius:12px;
+  padding:16px 18px;
+  font-size:.88rem;
+  color:var(--fg);
+  line-height:1.5;
+}
+#compra-fallback b{color:var(--gold-soft)}
+
+/* location */
+.loc-card{
+  display:flex;
+  flex-wrap:wrap;
+  gap:24px;
+  justify-content:space-between;
+  align-items:center;
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:26px;
+}
+.loc-card .addr b{display:block; font-family:'Cinzel',serif; font-size:1.1rem; color:var(--gold-soft); margin-bottom:6px}
+.loc-card .addr p{color:var(--muted); font-size:.92rem}
+
+/* footer */
+footer{
+  border-top:1px solid var(--line);
+  padding-block:34px calc(34px + env(safe-area-inset-bottom, 0px));
+  background:var(--bg);
+}
+.foot-grid{display:flex; flex-wrap:wrap; justify-content:space-between; gap:24px}
+.foot-org{display:flex; align-items:center; gap:14px}
+.foot-org img{height:46px;width:46px;object-fit:contain}
+.foot-org span{font-size:.82rem; color:var(--muted); max-width:220px}
+.foot-contact b{display:block; color:var(--gold-soft); font-family:'Cinzel',serif; font-size:.95rem; margin-bottom:8px}
+.copy-row{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.copy-row code{
+  background:var(--surface);
+  border:1px solid var(--line);
+  padding:6px 10px;
+  border-radius:8px;
+  font-size:.9rem;
+  letter-spacing:.02em;
+}
+.copy-row .copied{color:var(--ok); font-size:.78rem; display:none}
+.fineprint{margin-top:24px; font-size:.72rem; color:var(--muted); opacity:.8}
+
+/* ---------- reveal on scroll ---------- */
+.reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease}
+.reveal.in{opacity:1; transform:none}
+
+@media (prefers-reduced-motion: reduce){
+  .btn, .act, .phase, .step{transition:none}
+  .ticker-track, .hero, .poster-frame, .cta-row .btn-primary, .mystery-mark, .status.activa::before{animation:none}
+  .reveal{opacity:1; transform:none; transition:none}
+  .sparkle{display:none}
+}
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap">
+
+
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <div class="brand">
+      <img src="img/logo-minas.png" alt="">
+      <span class="brand-name">CACHIMBEADA&nbsp;MINERA</span>
+    </div>
+    <nav class="nav-links">
+      <a data-goto="lineup">Lineup</a>
+      <a data-goto="entradas">Entradas</a>
+      <a data-goto="ubicacion">Ubicación</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" data-goto="entradas">Entradas</a>
+  </div>
+</header>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>Savia Andina <em>✦</em> Los Shapis <em>✦</em> Esaud Suárez <em>✦</em> Jaltawi <em>✦</em> Artista Sorpresa <em>✦</em> 4 de diciembre <em>✦</em> Cuper Palace, Puno <em>✦</em></span>
+    <span>Savia Andina <em>✦</em> Los Shapis <em>✦</em> Esaud Suárez <em>✦</em> Jaltawi <em>✦</em> Artista Sorpresa <em>✦</em> 4 de diciembre <em>✦</em> Cuper Palace, Puno <em>✦</em></span>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="sparkle" style="width:5px;height:5px; top:12%; left:58%; animation-delay:.2s"></div>
+    <div class="sparkle" style="width:3px;height:3px; top:28%; left:48%; animation-delay:1.4s"></div>
+    <div class="sparkle" style="width:4px;height:4px; top:62%; left:66%; animation-delay:.8s"></div>
+    <div class="sparkle" style="width:3px;height:3px; top:78%; left:52%; animation-delay:2.2s"></div>
+    <div class="sparkle" style="width:5px;height:5px; top:45%; left:40%; animation-delay:1.8s"></div>
+    <div>
+      <p class="eyebrow">Promoción 2026 II · Facultad de Ingeniería de Minas</p>
+      <h1>Cachimbeada<br>Minera</h1>
+      <p class="sub">Recepción al cachimbo minero, en vísperas del Día del Minero. Una noche para toda la familia minera.</p>
+
+      <div class="facts">
+        <div class="chip">📅 <b>Viernes 4 de diciembre, 2026</b></div>
+        <div class="chip">📍 <b>Cuper Palace</b>, Av. Simón Bolívar 2482, Puno</div>
+        <div class="chip">🕒 Hora por confirmar</div>
+      </div>
+
+      <div class="cta-row">
+        <button class="btn btn-primary" data-goto="entradas">Ver entradas y precios</button>
+        <button class="btn btn-ghost" data-goto="lineup">Ver lineup</button>
+      </div>
+
+      <div class="countdown" id="countdown" aria-label="Cuenta regresiva para el evento">
+        <div class="cd-box"><strong id="cd-d">00</strong><span>días</span></div>
+        <div class="cd-box"><strong id="cd-h">00</strong><span>horas</span></div>
+        <div class="cd-box"><strong id="cd-m">00</strong><span>min</span></div>
+        <div class="cd-box"><strong id="cd-s">00</strong><span>seg</span></div>
+      </div>
+    </div>
+
+    <div class="poster-frame">
+      <div class="poster-pin"></div>
+      <img src="img/afiche-oficial.jpeg" alt="Afiche oficial: Recepción al Cachimbo Minero (Cachimbeada Minera), 04 de diciembre, con Savia Andina, Los Shapis, Esaud Suárez, Jaltawi y artista sorpresa">
+    </div>
+  </div>
+</section>
+
+<section id="lineup">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Lineup</p>
+      <h2>Quiénes suenan este 4 de diciembre</h2>
+    </div>
+    <div class="lineup-grid reveal">
+      <div class="act">
+        <div class="shot"><img src="img/savia-andina.jpeg" alt="Savia Andina"></div>
+        <div class="cap"><b>Savia Andina</b><small>Música andina</small></div>
+      </div>
+      <div class="act">
+        <div class="shot"><img src="img/shapis.jpg" alt="Los Shapis"></div>
+        <div class="cap"><b>Los Shapis</b><small>Chicha</small></div>
+      </div>
+      <div class="act">
+        <div class="shot"><img src="img/esaud-suarez.jpeg" alt="Esaud Suárez"></div>
+        <div class="cap"><b>Esaud Suárez</b><small>El príncipe de la cumbia</small></div>
+      </div>
+      <div class="act">
+        <div class="shot"><img src="img/jaltawi.jpeg" alt="Jaltawi"></div>
+        <div class="cap"><b>Jaltawi</b><small>Fusión andina</small></div>
+      </div>
+      <div class="act mystery">
+        <div class="shot"><div class="mystery-mark">?</div></div>
+        <div class="cap"><b>Artista sorpresa</b><small>Se revela pronto</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="entradas" class="alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Entradas</p>
+      <h2>Precios por fase de venta</h2>
+    </div>
+
+    <div class="phase-grid reveal">
+      <div class="phase">
+        <div class="phase-top">
+          <h3>Preventa 1</h3>
+          <span class="status activa">Activa ahora</span>
+        </div>
+        <div class="price-row"><span class="label">VIP</span><span class="amt">S/ 105</span></div>
+        <div class="price-row"><span class="label">General</span><span class="amt">S/ 55</span></div>
+        <div class="phase-cta">
+          <button class="btn btn-primary btn-sm" style="width:100%" data-comprar="Preventa 1">Comprar</button>
+        </div>
+      </div>
+
+      <div class="phase" data-start="2026-11-26" data-end="2026-12-03">
+        <div class="phase-top">
+          <h3>Regular</h3>
+          <span class="status" data-status></span>
+        </div>
+        <div class="price-row"><span class="label">VIP</span><span class="amt">S/ 115</span></div>
+        <div class="price-row"><span class="label">General</span><span class="amt">S/ 65</span></div>
+        <div class="phase-cta">
+          <button class="btn btn-ghost btn-sm" style="width:100%" disabled>Próximamente</button>
+        </div>
+      </div>
+
+      <div class="phase" data-start="2026-12-04" data-end="2026-12-04">
+        <div class="phase-top">
+          <h3>Puerta</h3>
+          <span class="status" data-status></span>
+        </div>
+        <p class="note">Solo con las entradas que no se hayan entregado antes. Precio sugerido: el de la fase Regular, sujeto a disponibilidad.</p>
+        <div class="phase-cta">
+          <button class="btn btn-ghost btn-sm" style="width:100%" disabled>Disponible el día del evento</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="comprar">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Cómo comprar</p>
+      <h2>Tu entrada, de la mano de un vendedor autorizado</h2>
+    </div>
+
+    <div class="steps reveal">
+      <div class="step">
+        <span class="n">1</span>
+        <b>Elige tu entrada</b>
+        <p>VIP o General, según la fase de venta vigente que ves arriba.</p>
+      </div>
+      <div class="step">
+        <span class="n">2</span>
+        <b>Toca "Comprar"</b>
+        <p>Te asignamos automáticamente a un vendedor autorizado de la promoción, repartiendo la demanda entre todos.</p>
+      </div>
+      <div class="step">
+        <span class="n">3</span>
+        <b>Confirma por WhatsApp</b>
+        <p>Se abre un chat ya redactado con tu pedido; coordinas el pago y la entrega de tu entrada directamente con esa persona.</p>
+      </div>
+    </div>
+
+    <div class="buy-cta">
+      <button class="btn btn-primary" data-comprar="Preventa 1">Comprar entradas ahora</button>
+    </div>
+
+    <div id="compra-fallback" hidden>
+      <b>Estamos habilitando la asignación automática de vendedores.</b><br>
+      En un par de días esta misma sección te conectará directo por WhatsApp con un vendedor autorizado. Mientras tanto, puedes escribir a la organización: <b>912 226 890</b>.
+    </div>
+  </div>
+</section>
+
+<!-- Puntos de venta: deshabilitado por ahora. Para reactivarlo, quita este
+     comentario y vuelve a agregar el enlace "Puntos de venta" en el <nav>.
+<section id="puntos-venta">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Puntos de venta</p>
+      <h2>Dónde comprar en persona</h2>
+    </div>
+    <div class="points-grid" id="puntos-venta-grid"></div>
+    <p class="fineprint" style="margin-top:16px">Los puntos de abajo son de ejemplo; reemplázalos por los puntos oficiales reales en cuanto los definan.</p>
+  </div>
+</section>
+-->
+
+<section id="ubicacion" class="alt">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Ubicación</p>
+      <h2>Dónde es la fiesta</h2>
+    </div>
+    <div class="loc-card reveal">
+      <div class="addr">
+        <b>Cuper Palace — local cerrado de eventos</b>
+        <p>Av. Simón Bolívar Nº 2482, Puno</p>
+      </div>
+      <!-- "Cómo llegar" deshabilitado por ahora:
+      <a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&query=Av.+Sim%C3%B3n+Bol%C3%ADvar+2482+Puno+Peru" target="_blank" rel="noopener">Cómo llegar ↗</a>
+      -->
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-org">
+        <img src="img/logo-minas.png" alt="Facultad de Ingeniería de Minas UNA Puno">
+        <img src="img/logo-unap.png" alt="Universidad Nacional del Altiplano">
+        <span>Organiza la Promoción 2026 II de la Facultad de Ingeniería de Minas, Universidad Nacional del Altiplano — Puno.</span>
+      </div>
+      <div class="foot-contact">
+        <b>Contacto</b>
+        <div class="copy-row">
+          <code id="phone-text">912 226 890</code>
+          <button class="btn btn-ghost btn-sm" id="copy-phone">Copiar</button>
+          <span class="copied" id="copied-msg">Copiado ✓</span>
+        </div>
+      </div>
+    </div>
+    <p class="fineprint">Cachimbeada Minera · 4 de diciembre de 2026 · Página informativa no oficial de venta directa; las entradas se gestionan a través de vendedores autorizados.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  // Scroll suave para los enlaces internos, sin tocar location.hash.
+  document.querySelectorAll('[data-goto]').forEach(function(el){
+    el.addEventListener('click', function(e){
+      e.preventDefault();
+      var target = document.getElementById(el.getAttribute('data-goto'));
+      if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  // ---- Cuenta regresiva al evento ----
+  var EVENTO = new Date('2026-12-04T00:00:00');
+  function tick(){
+    var now = new Date();
+    var diff = Math.max(0, EVENTO - now);
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor(diff % 86400000 / 3600000);
+    var m = Math.floor(diff % 3600000 / 60000);
+    var s = Math.floor(diff % 60000 / 1000);
+    var set = function(id, v){ var el = document.getElementById(id); if (el) el.textContent = String(v).padStart(2,'0'); };
+    set('cd-d', d); set('cd-h', h); set('cd-m', m); set('cd-s', s);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // ---- Aparición de secciones al hacer scroll ----
+  var revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && revealEls.length){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, {threshold:.15, rootMargin:'0px 0px -40px 0px'});
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  // ---- Estado de cada fase de venta (próxima / activa / cerrada) ----
+  function dayOnly(dt){ return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()); }
+  var today = dayOnly(new Date());
+  document.querySelectorAll('.phase[data-start]').forEach(function(card){
+    var start = dayOnly(new Date(card.getAttribute('data-start') + 'T00:00:00'));
+    var end = dayOnly(new Date(card.getAttribute('data-end') + 'T00:00:00'));
+    var tag = card.querySelector('[data-status]');
+    var state = today < start ? 'proxima' : (today > end ? 'cerrada' : 'activa');
+    var labels = {proxima:'Próximamente', activa:'Activa ahora', cerrada:'Cerrada'};
+    tag.textContent = labels[state];
+    tag.classList.add(state);
+  });
+
+  // ---- Puntos oficiales de venta ----
+  // TODO: reemplaza esta lista por los puntos de venta reales (quita
+  // "ejemplo: true" en cada uno cuando el dato ya no sea de prueba).
+  // Formato: { nombre, direccion, horario (opcional), ejemplo (true/false) }
+  var PUNTOS_DE_VENTA = [
+    { nombre: 'Punto de venta 1', direccion: 'Jr. Ejemplo 123, Puno', horario: 'Lun a sáb, 9am–8pm', ejemplo: true },
+    { nombre: 'Punto de venta 2', direccion: 'Av. Ejemplo 456, Puno', horario: 'Lun a sáb, 9am–8pm', ejemplo: true },
+    { nombre: 'Punto de venta 3', direccion: 'Jr. Ejemplo 789, Puno', horario: 'Lun a sáb, 9am–8pm', ejemplo: true }
+  ];
+
+  function mapsUrl(direccion){
+    return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(direccion + ', Puno, Perú');
+  }
+
+  var puntosGrid = document.getElementById('puntos-venta-grid');
+  if (puntosGrid){
+    PUNTOS_DE_VENTA.forEach(function(p){
+      var card = document.createElement('div');
+      card.className = 'point-card';
+      card.innerHTML =
+        (p.ejemplo ? '<span class="tag-example">Ejemplo</span>' : '') +
+        '<b></b><p></p>' +
+        (p.horario ? '<span class="hours"></span>' : '') +
+        '<a class="btn btn-ghost btn-sm" target="_blank" rel="noopener">Cómo llegar ↗</a>';
+      card.querySelector('b').textContent = p.nombre;
+      card.querySelector('p').textContent = p.direccion;
+      if (p.horario) card.querySelector('.hours').textContent = p.horario;
+      var link = card.querySelector('a');
+      link.href = mapsUrl(p.direccion);
+      puntosGrid.appendChild(card);
+    });
+  }
+
+  // ---- Asignación de vendedor autorizado ----
+  // Fuente: carpeta "Vendedores autorizados" / Respuestas – Registro de
+  // vendedores Cachimbeada Minera.xlsx (formulario de registro).
+  var VENDEDORES_AUTORIZADOS = [
+    { nombre: 'Condori Huancapaza Ronald', telefono: '968478958' },
+    { nombre: 'Arqui Vila Diego Adolfo', telefono: '954000260' },
+    { nombre: 'Apaza Cansaya, Ronald Leonell', telefono: '912226890' },
+    { nombre: 'Nina Quispe Cristhian Martin', telefono: '943669136' },
+    { nombre: 'Garnica Alvarez, Doniferson Paul', telefono: '944104262' },
+    { nombre: 'Ramos Dueñas Diana', telefono: '958017060' },
+    { nombre: 'Yana Tamayo, Aldair Alberto', telefono: '900675436' },
+    { nombre: 'Zevallos Ttito Isabel', telefono: '979395488' },
+    { nombre: 'Chura Quispe Jhon Denilson', telefono: '942172742' },
+    { nombre: 'Callo Arias Rivaldo Alexander', telefono: '928791412' },
+    { nombre: 'Pinazo Charaja Mauro Santos', telefono: '913880607' },
+    { nombre: 'Turpo Quispe, Ronald Cristian', telefono: '927025586' },
+    { nombre: 'Choque Cabana Gilmer Alcides', telefono: '928153514' },
+    { nombre: 'Cruz Vilca, Johan Franco', telefono: '915023242' },
+    { nombre: 'Vilca Ccasa, Romel Yassiel', telefono: '916982690' },
+    { nombre: 'Mamani Adco Vladimir', telefono: '910978454' },
+    { nombre: 'Chombo Coaquira Jose Felipe', telefono: '928044381' },
+    { nombre: 'Roque Roque Brany Ricardy', telefono: '939739157' },
+    { nombre: 'Quevedo Ticona Carlos Renato', telefono: '989230538' },
+    { nombre: 'Galarza Ventura Sneyder Deycon', telefono: '961514921' },
+    { nombre: 'Machaca Espinoza, Jkacson Ruso', telefono: '946726630' }
+  ];
+
+  function siguienteVendedor(){
+    if (!VENDEDORES_AUTORIZADOS.length) return null;
+    var idx = 0;
+    try { idx = parseInt(localStorage.getItem('cm_vendor_idx') || '0', 10) || 0; } catch(e) {}
+    var vendedor = VENDEDORES_AUTORIZADOS[idx % VENDEDORES_AUTORIZADOS.length];
+    try { localStorage.setItem('cm_vendor_idx', String(idx + 1)); } catch(e) {}
+    return vendedor;
+  }
+
+  document.querySelectorAll('[data-comprar]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var fase = btn.getAttribute('data-comprar');
+      var vendedor = siguienteVendedor();
+      var fallback = document.getElementById('compra-fallback');
+      if (!vendedor){
+        if (fallback){
+          fallback.hidden = false;
+          fallback.scrollIntoView({behavior:'smooth', block:'center'});
+        }
+        return;
+      }
+      if (fallback) fallback.hidden = true;
+      var msg = encodeURIComponent('Hola ' + vendedor.nombre + ', quiero comprar entradas en ' + fase + ' para la Cachimbeada Minera (4 de diciembre).');
+      var url = 'https://wa.me/51' + vendedor.telefono + '?text=' + msg;
+      window.open(url, '_blank', 'noopener');
+    });
+  });
+
+  // ---- Copiar número de contacto ----
+  var copyBtn = document.getElementById('copy-phone');
+  if (copyBtn){
+    copyBtn.addEventListener('click', function(){
+      var text = document.getElementById('phone-text').textContent.trim();
+      var done = function(){
+        var msg = document.getElementById('copied-msg');
+        if (msg){ msg.style.display = 'inline'; setTimeout(function(){ msg.style.display = 'none'; }, 1800); }
+      };
+      try {
+        navigator.clipboard.writeText(text).then(done, function(){
+          var r = document.createRange(); r.selectNode(document.getElementById('phone-text'));
+          window.getSelection().removeAllRanges(); window.getSelection().addRange(r);
+        });
+      } catch(e){
+        var r = document.createRange(); r.selectNode(document.getElementById('phone-text'));
+        window.getSelection().removeAllRanges(); window.getSelection().addRange(r);
+      }
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
