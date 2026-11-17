@@ -476,6 +476,7 @@ footer{
     <nav class="nav-links">
       <a data-goto="lineup">Lineup</a>
       <a data-goto="entradas">Entradas</a>
+      <a data-goto="puntos-venta">Puntos de venta</a>
       <a data-goto="ubicacion">Ubicación</a>
     </nav>
     <a class="btn btn-primary btn-sm" data-goto="entradas">Entradas</a>
@@ -640,19 +641,15 @@ footer{
   </div>
 </section>
 
-<!-- Puntos de venta: deshabilitado por ahora. Para reactivarlo, quita este
-     comentario y vuelve a agregar el enlace "Puntos de venta" en el <nav>.
 <section id="puntos-venta">
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal">
       <p class="eyebrow">Puntos de venta</p>
       <h2>Dónde comprar en persona</h2>
     </div>
-    <div class="points-grid" id="puntos-venta-grid"></div>
-    <p class="fineprint" style="margin-top:16px">Los puntos de abajo son de ejemplo; reemplázalos por los puntos oficiales reales en cuanto los definan.</p>
+    <div class="points-grid reveal" id="puntos-venta-grid"></div>
   </div>
 </section>
--->
 
 <section id="ubicacion" class="alt">
   <div class="wrap">
@@ -749,17 +746,19 @@ footer{
   });
 
   // ---- Puntos oficiales de venta ----
-  // TODO: reemplaza esta lista por los puntos de venta reales (quita
-  // "ejemplo: true" en cada uno cuando el dato ya no sea de prueba).
-  // Formato: { nombre, direccion, horario (opcional), ejemplo (true/false) }
+  // Formato: { nombre, direccion, horario (opcional), coords: {lat, lng} }
+  // coords viene de "Vendedores autorizados/Puntos de Venta/<nombre>/Otros
+  // datos/Datos.txt" — usamos coordenadas (no la dirección) para el enlace
+  // de Maps porque la dirección con numeración puede llevar a otro punto.
   var PUNTOS_DE_VENTA = [
-    { nombre: 'Punto de venta 1', direccion: 'Jr. Ejemplo 123, Puno', horario: 'Lun a sáb, 9am–8pm', ejemplo: true },
-    { nombre: 'Punto de venta 2', direccion: 'Av. Ejemplo 456, Puno', horario: 'Lun a sáb, 9am–8pm', ejemplo: true },
-    { nombre: 'Punto de venta 3', direccion: 'Jr. Ejemplo 789, Puno', horario: 'Lun a sáb, 9am–8pm', ejemplo: true }
+    { nombre: 'Agente Intercontrol C', direccion: 'Jr. Jorge Basadre N.° 170, Puno', coords: { lat: -15.828000, lng: -70.017222 } }
   ];
 
-  function mapsUrl(direccion){
-    return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(direccion + ', Puno, Perú');
+  function mapsUrl(p){
+    if (p.coords){
+      return 'https://www.google.com/maps/search/?api=1&query=' + p.coords.lat + ',' + p.coords.lng;
+    }
+    return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.direccion + ', Puno, Perú');
   }
 
   var puntosGrid = document.getElementById('puntos-venta-grid');
@@ -776,7 +775,7 @@ footer{
       card.querySelector('p').textContent = p.direccion;
       if (p.horario) card.querySelector('.hours').textContent = p.horario;
       var link = card.querySelector('a');
-      link.href = mapsUrl(p.direccion);
+      link.href = mapsUrl(p);
       puntosGrid.appendChild(card);
     });
   }
