@@ -328,6 +328,15 @@ section{padding-block:56px}
   border-radius:999px;
   padding:3px 9px;
 }
+.point-card .head{display:flex; align-items:center; gap:12px}
+.point-card .thumb{
+  width:52px; height:52px; flex:none;
+  border-radius:10px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  background:#000;
+}
+.point-card .thumb img{width:100%; height:100%; object-fit:cover}
 .point-card b{font-family:'Cinzel',serif; color:var(--gold-soft); font-size:1rem}
 .point-card p{color:var(--muted); font-size:.85rem}
 .point-card .hours{font-size:.78rem; color:var(--muted)}
@@ -755,12 +764,18 @@ footer{
   });
 
   // ---- Puntos oficiales de venta ----
-  // Formato: { nombre, direccion, horario (opcional), coords: {lat, lng} }
-  // coords viene de "Vendedores autorizados/Puntos de Venta/<nombre>/Otros
-  // datos/Datos.txt" — usamos coordenadas (no la dirección) para el enlace
-  // de Maps porque la dirección con numeración puede llevar a otro punto.
+  // Formato: { nombre, direccion, horario (opcional), imagen (opcional),
+  // coords: {lat, lng} }. coords viene de "Vendedores autorizados/Puntos
+  // de Venta/<nombre>/Otros datos/Datos.txt" — usamos coordenadas (no la
+  // dirección) para el enlace de Maps porque la dirección con numeración
+  // puede llevar a otro punto.
   var PUNTOS_DE_VENTA = [
-    { nombre: 'Agente Intercontrol C', direccion: 'Jr. Jorge Basadre N.° 170, Puno', coords: { lat: -15.828000, lng: -70.017222 } }
+    {
+      nombre: 'Agente Intercontrol C',
+      direccion: 'Jr. Jorge Basadre N.° 170, Puno',
+      imagen: 'img/punto-intercontrol-c.png',
+      coords: { lat: -15.828000, lng: -70.017222 }
+    }
   ];
 
   function mapsUrl(p){
@@ -777,12 +792,17 @@ footer{
       card.className = 'point-card';
       card.innerHTML =
         (p.ejemplo ? '<span class="tag-example">Ejemplo</span>' : '') +
-        '<b></b><p></p>' +
+        '<div class="head">' +
+          (p.imagen ? '<div class="thumb"><img alt=""></div>' : '') +
+          '<b></b>' +
+        '</div>' +
+        '<p></p>' +
         (p.horario ? '<span class="hours"></span>' : '') +
         '<a class="btn btn-ghost btn-sm" target="_blank" rel="noopener">Cómo llegar ↗</a>';
       card.querySelector('b').textContent = p.nombre;
       card.querySelector('p').textContent = p.direccion;
       if (p.horario) card.querySelector('.hours').textContent = p.horario;
+      if (p.imagen) card.querySelector('.thumb img').src = p.imagen;
       var link = card.querySelector('a');
       link.href = mapsUrl(p);
       puntosGrid.appendChild(card);
