@@ -230,21 +230,41 @@ body::before{
   flex-wrap:wrap;
   align-items:center;
   justify-content:space-between;
-  gap:16px;
-  background:var(--surface-2);
-  border:1px solid var(--warn);
-  border-radius:14px;
-  padding:16px 20px;
+  gap:18px;
+  background:linear-gradient(135deg, rgba(124,38,50,.55), rgba(217,164,65,.18)), var(--surface-2);
+  border:2px solid var(--warn);
+  border-radius:16px;
+  padding:22px 26px;
   margin-bottom:28px;
+  box-shadow:0 0 0 0 rgba(217,164,65,.5);
+  animation:preventaPulse 2.2s ease-in-out infinite;
+}
+.preventa-deadline-text{display:flex; flex-direction:column; gap:4px}
+.preventa-deadline-eyebrow{
+  font-family:'Cinzel',serif;
+  font-size:.82rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--gold-soft);
+  font-weight:700;
 }
 .preventa-deadline-label{
-  font-size:.92rem;
+  font-size:1.08rem;
   color:var(--fg);
-  font-weight:600;
+  font-weight:700;
 }
-.preventa-cd{display:flex; gap:10px}
-.cd-box-sm{width:54px; padding:7px 4px}
-.cd-box-sm strong{font-size:1.15rem}
+.preventa-cd{display:flex; gap:12px}
+.cd-box-sm{
+  width:62px;
+  padding:9px 4px;
+  background:rgba(12,10,8,.55);
+  border-color:var(--warn);
+}
+.cd-box-sm strong{font-size:1.5rem; color:var(--gold-soft)}
+@keyframes preventaPulse{
+  0%, 100%{ box-shadow:0 0 0 0 rgba(217,164,65,.45) }
+  50%{ box-shadow:0 0 22px 4px rgba(217,164,65,.55) }
+}
 @media (max-width:560px){
   .preventa-deadline{flex-direction:column; align-items:flex-start}
 }
@@ -619,7 +639,10 @@ footer{
     </div>
 
     <div class="preventa-deadline reveal" id="preventa-deadline">
-      <span class="preventa-deadline-label">⏳ La Preventa 1 termina el miércoles 25 de noviembre, 11:59 p.m.</span>
+      <div class="preventa-deadline-text">
+        <span class="preventa-deadline-eyebrow">⚠ Últimos días de Preventa 1</span>
+        <span class="preventa-deadline-label">Termina el miércoles 25 de noviembre, 11:59 p.m.</span>
+      </div>
       <div class="preventa-cd" id="preventa-cd">
         <div class="cd-box cd-box-sm"><strong id="pv-d">00</strong><span>días</span></div>
         <div class="cd-box cd-box-sm"><strong id="pv-h">00</strong><span>horas</span></div>
@@ -784,10 +807,12 @@ footer{
     var diffPreventa = PREVENTA_FIN - now;
     var pv = partes(diffPreventa);
     set('pv-d', pv.d); set('pv-h', pv.h); set('pv-m', pv.m); set('pv-s', pv.s);
+    var eyebrow = document.querySelector('.preventa-deadline-eyebrow');
     var label = document.querySelector('.preventa-deadline-label');
     var cdBox = document.getElementById('preventa-cd');
     if (label && diffPreventa <= 0){
-      label.textContent = '⏳ La Preventa 1 ya cerró (terminó el miércoles 25 de noviembre, 11:59 p.m.)';
+      if (eyebrow) eyebrow.textContent = '✔ Preventa 1 cerrada';
+      label.textContent = 'Terminó el miércoles 25 de noviembre, 11:59 p.m.';
       if (cdBox) cdBox.hidden = true;
     }
   }
