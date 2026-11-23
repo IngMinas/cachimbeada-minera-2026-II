@@ -230,6 +230,31 @@ body::before{
 }
 .cd-box span{font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
 
+/* cuenta regresiva de cierre de preventa */
+.preventa-deadline{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  background:var(--surface-2);
+  border:1px solid var(--warn);
+  border-radius:14px;
+  padding:16px 20px;
+  margin-bottom:28px;
+}
+.preventa-deadline-label{
+  font-size:.92rem;
+  color:var(--fg);
+  font-weight:600;
+}
+.preventa-cd{display:flex; gap:10px}
+.cd-box-sm{width:54px; padding:7px 4px}
+.cd-box-sm strong{font-size:1.15rem}
+@media (max-width:560px){
+  .preventa-deadline{flex-direction:column; align-items:flex-start}
+}
+
 .poster-frame{
   position:relative;
   justify-self:center;
@@ -602,6 +627,16 @@ footer{
       <h2>Precios por fase de venta</h2>
     </div>
 
+    <div class="preventa-deadline reveal" id="preventa-deadline">
+      <span class="preventa-deadline-label">⏳ La Preventa 1 termina el miércoles 25 de noviembre, 11:59 p.m.</span>
+      <div class="preventa-cd" id="preventa-cd">
+        <div class="cd-box cd-box-sm"><strong id="pv-d">00</strong><span>días</span></div>
+        <div class="cd-box cd-box-sm"><strong id="pv-h">00</strong><span>horas</span></div>
+        <div class="cd-box cd-box-sm"><strong id="pv-m">00</strong><span>min</span></div>
+        <div class="cd-box cd-box-sm"><strong id="pv-s">00</strong><span>seg</span></div>
+      </div>
+    </div>
+
     <div class="phase-grid reveal">
       <div class="phase">
         <div class="phase-top">
@@ -739,15 +774,31 @@ footer{
 
   // ---- Cuenta regresiva al evento ----
   var EVENTO = new Date('2026-12-04T00:00:00');
+  var PREVENTA_FIN = new Date('2026-11-25T23:59:00');
+  var set = function(id, v){ var el = document.getElementById(id); if (el) el.textContent = String(v).padStart(2,'0'); };
+  function partes(diffMs){
+    var diff = Math.max(0, diffMs);
+    return {
+      d: Math.floor(diff / 86400000),
+      h: Math.floor(diff % 86400000 / 3600000),
+      m: Math.floor(diff % 3600000 / 60000),
+      s: Math.floor(diff % 60000 / 1000)
+    };
+  }
   function tick(){
     var now = new Date();
-    var diff = Math.max(0, EVENTO - now);
-    var d = Math.floor(diff / 86400000);
-    var h = Math.floor(diff % 86400000 / 3600000);
-    var m = Math.floor(diff % 3600000 / 60000);
-    var s = Math.floor(diff % 60000 / 1000);
-    var set = function(id, v){ var el = document.getElementById(id); if (el) el.textContent = String(v).padStart(2,'0'); };
-    set('cd-d', d); set('cd-h', h); set('cd-m', m); set('cd-s', s);
+    var p = partes(EVENTO - now);
+    set('cd-d', p.d); set('cd-h', p.h); set('cd-m', p.m); set('cd-s', p.s);
+
+    var diffPreventa = PREVENTA_FIN - now;
+    var pv = partes(diffPreventa);
+    set('pv-d', pv.d); set('pv-h', pv.h); set('pv-m', pv.m); set('pv-s', pv.s);
+    var label = document.querySelector('.preventa-deadline-label');
+    var cdBox = document.getElementById('preventa-cd');
+    if (label && diffPreventa <= 0){
+      label.textContent = '⏳ La Preventa 1 ya cerró (terminó el miércoles 25 de noviembre, 11:59 p.m.)';
+      if (cdBox) cdBox.hidden = true;
+    }
   }
   tick();
   setInterval(tick, 1000);
@@ -799,6 +850,12 @@ footer{
       direccion: 'Facultad de Ingeniería de Minas, UNA Puno',
       imagen: 'img/punto-copykaty.jpg',
       coords: { lat: -15.822917, lng: -70.015389 }
+    },
+    {
+      nombre: 'Kiosco INA 21',
+      direccion: 'Colegio INA 21, Azángaro',
+      imagen: 'img/punto-kiosco-ina21.jpeg',
+      coords: { lat: -14.913167, lng: -70.191806 }
     }
   ];
 
