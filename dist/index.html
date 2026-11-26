@@ -661,14 +661,14 @@ footer{
     </div>
 
     <div class="phase-grid reveal">
-      <div class="phase">
+      <div class="phase" data-start="2026-01-01" data-end="2026-11-25">
         <div class="phase-top">
           <h3>Preventa 1</h3>
-          <span class="status activa">Activa ahora</span>
+          <span class="status" data-status></span>
         </div>
         <p class="note">Precio y tipo de entrada: consulta con tu vendedor autorizado.</p>
         <div class="phase-cta">
-          <button class="btn btn-primary btn-sm" style="width:100%" data-comprar="Preventa 1">Comprar</button>
+          <button class="btn btn-sm" style="width:100%" data-comprar="Preventa 1">Comprar</button>
         </div>
       </div>
 
@@ -679,7 +679,7 @@ footer{
         </div>
         <p class="note">Precio y tipo de entrada: consulta con tu vendedor autorizado.</p>
         <div class="phase-cta">
-          <button class="btn btn-ghost btn-sm" style="width:100%" disabled>Próximamente</button>
+          <button class="btn btn-sm" style="width:100%" data-comprar="Regular">Comprar</button>
         </div>
       </div>
 
@@ -690,7 +690,7 @@ footer{
         </div>
         <p class="note">Solo con las entradas que no se hayan entregado antes. Precio sugerido: el de la fase Regular, sujeto a disponibilidad.</p>
         <div class="phase-cta">
-          <button class="btn btn-ghost btn-sm" style="width:100%" disabled>Disponible el día del evento</button>
+          <button class="btn btn-sm" style="width:100%" data-comprar="Puerta">Disponible el día del evento</button>
         </div>
       </div>
     </div>
@@ -845,6 +845,7 @@ footer{
   // ---- Estado de cada fase de venta (próxima / activa / cerrada) ----
   function dayOnly(dt){ return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()); }
   var today = dayOnly(new Date());
+  var activePhaseName = null;
   document.querySelectorAll('.phase[data-start]').forEach(function(card){
     var start = dayOnly(new Date(card.getAttribute('data-start') + 'T00:00:00'));
     var end = dayOnly(new Date(card.getAttribute('data-end') + 'T00:00:00'));
@@ -853,6 +854,26 @@ footer{
     var labels = {proxima:'Próximamente', activa:'Activa ahora', cerrada:'Cerrada'};
     tag.textContent = labels[state];
     tag.classList.add(state);
+
+    var btn = card.querySelector('.phase-cta button');
+    var isPuerta = card.querySelector('h3').textContent.trim() === 'Puerta';
+    if (btn){
+      if (state === 'activa'){
+        btn.className = 'btn btn-primary btn-sm';
+        btn.disabled = false;
+        btn.textContent = 'Comprar';
+        activePhaseName = btn.getAttribute('data-comprar');
+      } else {
+        btn.className = 'btn btn-ghost btn-sm';
+        btn.disabled = true;
+        btn.textContent = isPuerta ? 'Disponible el día del evento' : (state === 'proxima' ? 'Próximamente' : 'Cerrada');
+      }
+    }
+  });
+  document.querySelectorAll('[data-comprar]').forEach(function(el){
+    if (el.hasAttribute('disabled')) return;
+    if (el.closest('.phase-cta')) return;
+    if (activePhaseName) el.setAttribute('data-comprar', activePhaseName);
   });
 
   // ---- Puntos oficiales de venta ----
